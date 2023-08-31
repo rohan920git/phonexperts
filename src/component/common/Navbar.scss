@@ -1,0 +1,54 @@
+$secondry2_color: #d8363a;
+.navbar{
+    padding :2px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    
+    >span{
+        margin-left: 3px;
+        transition:0.3;
+    }
+    >span:hover{
+        color:$secondry2_color;
+         }  
+    >ul{
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        >li{
+            list-style-type: none;
+            >a{
+                text-decoration: none;
+                color:black;
+                transition: 0.2s;             
+            }
+            >a:hover{
+                color:$secondry2_color;
+                 }  
+        }
+     
+    }
+}
+.searchbar{
+    width:40%;
+    >input{
+        border:1px solid black;
+        width: 100%;
+       border-radius: 5px; 
+       transition: 0.3;
+    }
+    >input:hover{
+        border-color: $secondry2_color;
+    }
+  
+}
+.account{
+    color: #443e3e;
+    width: 25%;
+    text-align: end;
+    font-size: 25px;
+    font-weight: 1;
+}
