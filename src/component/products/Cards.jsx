@@ -6,7 +6,7 @@ function Cards() {
     <>
     <div className='Card'>
           <div className='card_image'>
-            <img src={image}></img>
+            <img src={image} alt='phone'></img>
           </div>
           <div className='details'>
             <span>Samsumg</span>

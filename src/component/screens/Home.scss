@@ -1,6 +1,5 @@
-*{
-margin : 2px;
-}
+$secondry2_color: #d8363a;
+
 .cards{
     display: flex;
     flex-wrap: wrap;
@@ -8,4 +7,40 @@ margin : 2px;
     justify-content: center;
     gap:30px;
     
+}
+.body{
+    margin-top: 44px;
+}
+.banner{
+    color:black;
+    margin: 0;
+    padding:0;
+    width: 100%;
+    height: 100vh;
+    background-image: url('../assets/smartPhone.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+     background-position: center;
+    
+}
+.on_banner_txt{
+    height: 100%;
+
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    >button{
+        border-radius:3px;
+        border:1px solid black;
+        background: transparent;
+        transition: 0.5s;
+      
+     }
+     >button:hover{
+        border:4px solid $secondry2_color;
+        color:$secondry2_color;
+        font-size: 30px;
+    } 
 }

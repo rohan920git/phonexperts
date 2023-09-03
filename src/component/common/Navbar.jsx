@@ -3,9 +3,10 @@ import './Navbar.scss'
 import { Link } from 'react-router-dom'
 import {VscAccount} from 'react-icons/vsc'
 function Navbar() {
+
   return (
-    <div>
-      <navbar className="navbar">
+    <div >
+      <div className="navbars">
          <span>Phonexperts</span>
          <ul>
           <li>
@@ -25,7 +26,7 @@ function Navbar() {
          <div className='account'>
             <VscAccount></VscAccount>
           </div>         
-      </navbar>
+      </div>
       
     </div>
   )

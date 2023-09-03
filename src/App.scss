@@ -5,6 +5,9 @@
 }
 *{
    font-family: 'Poppins', sans-serif;
-  margin:0px; 
-  padding:0px;
+  margin:0; 
+  padding:0;
+ >::-webkit-scrollbar{
+  display: none;
+ }
 }

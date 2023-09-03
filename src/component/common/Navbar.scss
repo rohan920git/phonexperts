@@ -1,11 +1,17 @@
 $secondry2_color: #d8363a;
-.navbar{
+
+.navbars{
+    background-color: white;
     padding :2px;
     font-weight: 400;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    
+    position: fixed;
+    top:0;
+    width: 100%;
+
+   
     >span{
         margin-left: 3px;
         transition:0.3;
