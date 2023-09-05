@@ -18,6 +18,9 @@ function Navbar() {
           <li>
             <Link to={"/"}>about</Link>
           </li>
+          <li>
+            <Link to={"/"}>Phone Guide</Link>
+          </li>
          </ul>
          <div className='searchbar'>
           <input placeholder='Search For phones'></input>

@@ -17,7 +17,12 @@ function Home() {
             <button>Buy-Now</button>
           </div>
         </div>
-        
+        <div className='sub-banner'>
+            <div className='sub-banner-main'>
+
+            </div>
+        </div>
+        <span>Top Rated phones</span>
         <div className='cards'>
           
           <Cards></Cards>
