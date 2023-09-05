@@ -4,6 +4,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
 const jwtsec ="asonsfsaew@@#@AEOHADNsdfis";
 router.post("/createuser",
 [
@@ -59,5 +60,41 @@ async (req , res)=>{
 //   }
   }
 
-)
+);
+router.post("/login",[
+  body("email").isEmail(),
+  body("password").isLength(6)
+], async (req, res)=>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+      res.json({"error" : errors})
+    }
+
+  
+    db.query('SELECT * FROM users WHERE email = ?',[req.body.email], async(err,result)=>{
+      if(err){
+          res.json({"error":err});
+      }
+      if( result.length === 0 ){
+        return res.status(400).json({success:false , message:"email does not exist"});
+
+      } 
+     const user = result[0];
+     let pwdcompare =  await bcrypt.compare(req.body.password , user.password_);
+     if(!(pwdcompare)){
+       
+       return res.status(400).json({error : "enter correct password" ,
+                                     Message : "password is worong",
+                                     success:false});
+     }
+     const token =  jwt.sign({id: user.id, username: user.username} , jwtsec);
+     res.json({ token });
+
+    }
+  )
+  
+
+
+
+})
 module.exports=router;

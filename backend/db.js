@@ -6,18 +6,6 @@ const dbcofig= {
     database:'phonexpert'
 }
 const db = mysql.createPool(dbcofig);
-// pool.getConnection((err,connection)=>{
-//     if(err){
-//         return console.log(err);
-//     }
-//     connection.query("SELECT * FROM employes;",(qerr,results)=>{
-//         connection.release();
-//         if(qerr){
-//             return console.log(qerr);
-//         }
-//         else{
-//             return console.log(results);
-//         }
-//     })
-// })
+
+
 module.exports=db;
