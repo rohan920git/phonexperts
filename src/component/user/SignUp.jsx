@@ -1,9 +1,33 @@
 import React, { useState } from 'react'
+import {  useNavigate } from 'react-router-dom'
 import './SignUp.scss'
 function SignUp() {
+  const navigate = useNavigate();
   const [credentials , setCredentials] = useState({name:"",username:"",email:"",password:""})
-   const  submithandler= ()=>{
-
+   const  submithandler= async (e)=>{
+    e.preventDefault();
+    const response = await fetch("http://localhost:5000/createuser",{
+     method: 'POST', // Using POST request to create a new resource in the database
+     mode: 'cors', // no-cors, cors, *same-origin
+     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+     credentials: 'same-origin', // include, *same-origin, omit
+     headers: {
+         'Content-Type': 'application/json',
+     },
+     redirect: 'follow', // manual, *follow, error
+     referrer: 'no-referrer', 
+         body:JSON.stringify({name:credentials.name,username:credentials.username,email:credentials.email,password:credentials.password})
+         
+    })
+    const json = await response.json();
+    console.log(json);
+    if(!json.success){
+      alert("enter valid credentials")
+     }
+     else{
+      navigate("/login");
+     }
+     
    }
    const changeHandler= (e)=>{
     e.preventDefault();

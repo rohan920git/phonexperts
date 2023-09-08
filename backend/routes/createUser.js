@@ -25,7 +25,7 @@ async (req , res)=>{
         }
         else{
           if(result > 0){
-            res.json({message:"email already exist"})
+            res.json({success:false, message:"email already exist"})
           }
         }
     })
@@ -39,7 +39,7 @@ async (req , res)=>{
   
     db.query('insert into users (name_,user_name, email , password_)values(?,?,?,?);',[req.body.name,req.body.username,email,secpassword],(err,result)=>{
         if(err){
-            res.json({message:err});
+            res.json({success:false, message:err});
         }
         else{
             res.json({success:true});
@@ -67,13 +67,13 @@ router.post("/login",[
 ], async (req, res)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-      res.json({"error" : errors})
+      res.json({success:false,"error" : errors})
     }
 
   
     db.query('SELECT * FROM users WHERE email = ?',[req.body.email], async(err,result)=>{
       if(err){
-          res.json({"error":err});
+          res.json({success:false,"error":err});
       }
       if( result.length === 0 ){
         return res.status(400).json({success:false , message:"email does not exist"});
@@ -88,7 +88,7 @@ router.post("/login",[
                                      success:false});
      }
      const token =  jwt.sign({id: user.id, username: user.username} , jwtsec);
-     res.json({ token });
+     res.json({ success:true,token:token });
 
     }
   )
