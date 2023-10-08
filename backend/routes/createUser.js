@@ -1,4 +1,6 @@
 const express = require("express");
+
+
 const db = require('../db');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
@@ -6,6 +8,11 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const jwtsec ="asonsfsaew@@#@AEOHADNsdfis";
+const getCurrentTimestamp = () => {
+  const now = new Date();
+  const timestamp = now.toISOString().slice(0, 19).replace('T', ' ');
+  return timestamp;
+};
 router.post("/createuser",
 [
 body("name").isLength({min:2}),
@@ -16,16 +23,16 @@ body("password").isLength({min:6})
 async (req , res)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ success:false , errors: errors.array() , message:"Password Length must be more than 6"});
     }
     let email = req.body.email;
     db.query('SELECT email FROM users WHERE email = ?',[email],(err,result)=>{
         if(err){
-            res.json({"error":err});
+            res.json({success:false,message:err});
         }
         else{
-          if(result > 0){
-            res.json({success:false, message:"email already exist"})
+          if(result.length !== 0){
+            res.status(400).json({success:false, message:"email already exist"})
           }
         }
     })
@@ -36,13 +43,15 @@ async (req , res)=>{
     // }
     const salt = await bcrypt.genSalt(10);
     let secpassword = await bcrypt.hash(req.body.password,salt);
-  
-    db.query('insert into users (name_,user_name, email , password_)values(?,?,?,?);',[req.body.name,req.body.username,email,secpassword],(err,result)=>{
+   
+    
+    const timestamp = getCurrentTimestamp();
+    db.query('insert into users (name_,user_name, email , password_,created,modified)values(?,?,?,?,?,?);',[req.body.name,req.body.username,email,secpassword,timestamp,timestamp],(err,result)=>{
         if(err){
             res.json({success:false, message:err});
         }
         else{
-            res.json({success:true});
+            res.json({success:true ,message:"account successfully Created" });
         }
     });
 //   try{ 
@@ -67,7 +76,7 @@ router.post("/login",[
 ], async (req, res)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-      res.json({success:false,"error" : errors})
+      res.json({success:false,"error" : errors,message:"Credentials are not in right formate"})
     }
 
   
@@ -84,15 +93,16 @@ router.post("/login",[
      if(!(pwdcompare)){
        
        return res.status(400).json({error : "enter correct password" ,
-                                     Message : "password is worong",
+                                     message : "password is worong",
                                      success:false});
      }
      const token =  jwt.sign({id: user.id, username: user.username} , jwtsec);
-     res.json({ success:true,token:token });
-
+     
+     res.cookie("authCookie",token,{})
+     res.json({ success: true, token: token });
     }
   )
-  
+
 
 
 

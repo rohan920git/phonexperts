@@ -2,7 +2,15 @@ import React from 'react'
 import Cards from '../products/Cards'
 import './Home.scss'
 import Navbar from '../common/Navbar.jsx'
-
+import Cookies from 'js-cookie';
+const cookieremover = ()=>{
+  if (Cookies.get('authCookie')) {
+    Cookies.remove('authCookie');
+    console.log('Cookie removed successfully');
+  } else {
+    console.log('Cookie not found');
+  }
+}
 function Home() {
   
 
@@ -47,8 +55,9 @@ function Home() {
         </div>
 
       </section>
-      
-   
+      {/* <iframe src='https://www.flipkart.com/poco-c31-royal-blue-64-gb/p/itm19effae969b86?pid=MOBG73E7GKQK4KZP'></iframe> */}
+    
+      <button onClick={cookieremover}> Log out</button>
     </>
   )
 }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import {  useNavigate } from 'react-router-dom'
+import {ToastContainer , toast} from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css"
 import './SignUp.scss'
 function SignUp() {
   const navigate = useNavigate();
@@ -22,10 +24,15 @@ function SignUp() {
     const json = await response.json();
     console.log(json);
     if(!json.success){
-      alert("enter valid credentials")
+      toast(json.message);
+      console.log(`${json.message}`);
      }
      else{
-      navigate("/login");
+       toast("Account Created Sucessfully")
+      setTimeout(()=>{
+        
+        navigate("/login");
+      },2000)
      }
      
    }
@@ -57,6 +64,7 @@ function SignUp() {
          <button type='submit' className='submit-botton'>SIGN UP</button>
         
       </form>
+      <ToastContainer/>
       <h1>{credentials.name}===={credentials.username}====={credentials.email}===={credentials.password}</h1>
     </section>
   )
