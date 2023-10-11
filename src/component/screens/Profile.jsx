@@ -1,8 +1,7 @@
 import React from 'react'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom';
-
-
+import Navbar from '../common/Navbar'
 function Profile() {
     const navigate = useNavigate();
     const cookieremover = ()=>{
@@ -19,7 +18,9 @@ function Profile() {
     
   if(Cookies.get('authCookie')){return (
     <div>
-      true
+      <Navbar></Navbar>
+  
+  
       <button onClick={cookieremover}> Log out</button>
       
       
