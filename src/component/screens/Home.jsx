@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Cards from '../products/Cards'
 import './Home.scss'
 import Navbar from '../common/Navbar.jsx'
 import Cookies from 'js-cookie';
+
 const cookieremover = ()=>{
   if (Cookies.get('authCookie')) {
     Cookies.remove('authCookie');
@@ -12,7 +13,20 @@ const cookieremover = ()=>{
   }
 }
 function Home() {
-  
+  const [phone_data, set_ph_data] = useState(null)
+  useEffect( ()=>{
+    fetch_data();
+    
+   },[])
+
+  const fetch_data = async ()=>{
+    const response = await fetch("http://localhost:5000/getdata");
+    const data = await response.json();
+ set_ph_data(data);
+ console.log(phone_data);
+    
+  }
+
 
   return (
     <>
