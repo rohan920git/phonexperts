@@ -1,7 +1,7 @@
 import React from 'react'
 import image from '../assets/samsumg.jpg'
 import './Cards.scss'
-function Cards() {
+function Cards(props) {
   return (
     <>
     <div className='Card'>
@@ -9,8 +9,8 @@ function Cards() {
             <img src={image} alt='phone'></img>
           </div>
           <div className='details'>
-            <span>Samsumg</span>
-            <span>4.7</span>
+            <span>{props.data.p_name}</span>
+            <span>{props.data.orignal_price}</span>
             <button>Buy Now</button>
           </div>
     </div>

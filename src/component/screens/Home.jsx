@@ -13,17 +13,27 @@ const cookieremover = ()=>{
   }
 }
 function Home() {
-  const [phone_data, set_ph_data] = useState(null)
+  const [phone_data, set_ph_data] = useState([])
   useEffect( ()=>{
     fetch_data();
     
    },[])
 
   const fetch_data = async ()=>{
-    const response = await fetch("http://localhost:5000/getdata");
-    const data = await response.json();
- set_ph_data(data);
- console.log(phone_data);
+    fetch("http://localhost:5000/getdata")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      set_ph_data(data);
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error('Fetch error:', error);
+    });
     
   }
 
@@ -46,26 +56,15 @@ function Home() {
         </div>
         <span>Top Rated phones</span>
         <div className='cards'>
-          
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
-          <Cards></Cards>
+          {
+            phone_data !== [] ? phone_data.map((data)=>{
+              return(
+                <div key={data.id}>
+                <Cards data={data} ></Cards>
+                </div>
+              )
+            }):""
+          }
         </div>
 
       </section>
