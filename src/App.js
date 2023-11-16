@@ -8,9 +8,12 @@ import Cards from './component/products/Cards.jsx';
 import Home from './component/screens/Home';
 import Profile from './component/screens/Profile';
 import Product from './component/products/Product';
-
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import Cart from './component/screens/Cart';
 function App() {
   return (
+    <Provider store={store}>
     <div className="App">
     <Router>
       <Routes>
@@ -18,12 +21,14 @@ function App() {
         <Route path='/login' element={<Login></Login>}></Route>
         <Route path='/signup' element={<SignUp></SignUp>}></Route>
         <Route path='/profile' element={<Profile></Profile>}></Route>
-        <Route path='/product' element={<Product></Product>}></Route>
+        <Route path='/cart' element={<Cart></Cart>}></Route>
+        <Route path='/product/:id' element={<Product></Product>}></Route>
         {/* <Route path='/login' element={<Login></Login>}></Route>
         <Route path='/createuser' element={<SignUP/>}></Route> */}
       </Routes>
      </Router>
     </div>
+    </Provider>
   );
 }
 

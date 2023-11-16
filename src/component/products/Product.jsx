@@ -1,97 +1,185 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../common/Navbar'
+import Cookies from 'js-cookie'
 import './Product.scss'
-import { VscBracketDot } from 'react-icons/vsc'
+
+import { useParams } from 'react-router-dom'
+
+
 function Product() {
+  const {id} = useParams();
+
+
+  const [productData, setProductData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(()=>{
+      const testdata = JSON.parse(Cookies.get('data'))
+       console.log(testdata)
+      
+      const fetch_data = async ()=>{
+        try{ const response = await fetch(`http://localhost:5000/getdetails/${id}`)
+      if(!response.ok){
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setProductData(data);
+
+    }
+    catch (error){
+      console.log(error)
+    }
+    finally{
+      setIsLoading(false);
+    }
+  }
+  fetch_data();
+ 
+},[])
   return (
     <>
-      <Navbar></Navbar>
-      <div className='product-info'>
-           <div className='product-image'>
-            <div className='act-image'></div>
-           </div>
-           <div className='product-description'>
-            <div className='product-name'>
-            <h3>SAMSUNG Galaxy S23 Plus 5G (Cream, 512 GB)  (8 GB RAM)</h3>
-            </div>
-            <div className='product-price'>
-              <h3>₹1999</h3> 
-              <h5>₹1,04,999</h5> 
-            </div>
-            <div className='description'>
-              <table>
-             
-                <td>Description</td>
-               
-                <td>
+       {
+        isLoading ? <div>
+          loading
+        </div> : (
+          productData !== [] ? (  <> <Navbar></Navbar>
+           
+          <div className='product-info'>
+               <div className='product-image'>
+                <div className='act-image'></div>
+               </div>
+               <div className='product-description'>
+                <div className='product-name'>
+                <h3>{productData[0].p_brand} {productData[0].p_name} ({productData[0].color}, {productData[0].rom}GB)  ({productData[0].ram}GB)</h3>
+                </div>
+                <div className='product-price'>
+                  <h3>{productData[0].discounted_price}</h3> 
+                  <h5>{productData[0].orignal_price}</h5> 
+                </div>
+                <div className='description'>
+                  <table>
+                 
+                    <td>Description</td>
+                   
+                    <td>
+                    {productData[0].p_des}    
+                    </td>
+              
+                  
                 
-Give yourself a smartphone that recognises your emotions and responds appropriately. The Samsung Galaxy S23 Plus 5G's enhanced AI and Nightography feature produces low-light photos and videos that are vivid and colourful from dusk to dawn and back again. The Snapdragon processor in this phone also offers quick video streaming and gaming. Additionally, adaptive 120 Hz makes scrolling fluid, and Eye Comfort Shield guards against eye fatigue even while looking in low light.
-
-                </td>
-          
+                  
+                  </table>
+                
               
-            
-              
-              </table>
-            
+                </div>
+                <div className='product-specification'>
+                  <table>
+                  <tr>
+                    <td>Brand</td>
+                    <td>
+                     {productData[0].p_brand}
+                    </td>
+                </tr>
+                  <tr>
+                    <td>Ram</td>
+                    <td>
+                      {productData[0].ram}GB
+                    </td>
+                </tr>
+                <tr>
+                    <td>Rom</td>
+                    <td>
+                       {productData[0].rom}GB
+                    </td>
+                </tr>
+                <tr>
+                    <td>Color</td>
+                    <td>
+                       {productData[0].color}
+                    </td>
+                </tr>
+                <tr>
+                    <td>battary</td>
+                    <td>
+                      {productData[0].battery}mAH
+                    </td>
+                </tr>
+                <tr>
+                    <td>processor</td>
+                    <td>
+                      {productData[0].processor}
+                    </td>
+                </tr>
+                <tr>
+                    <td>menufecturer</td>
+                    <td>
+                      {productData[0].p_brand}
+                    </td>
+                </tr>
+                <tr>
+                    <td>camera</td>
+                    <td>
+                      {productData[0].camera}
+                    </td>
+                </tr>
+                <tr>
+                    <td>secondry camera</td>
+                    <td>
+                      {productData[0].frontcamera}
+                    </td>
+                </tr>
+                <tr>
+                    <td>primary camera</td>
+                    <td>
+                      {productData[0].rearcamera}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Operating System</td>
+                    <td>
+                      {productData[0].operatingsystem}
+                    </td>
+                </tr>
+                <tr>
+                    <td>supported networks</td>
+                    <td>
+                      {productData[0].supportednetwork}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Wifi version</td>
+                    <td>
+                      {productData[0].wifiversion}
+                    </td>
+                </tr>
+                <tr>
+                    <td>NFC</td>
+                    <td>
+                      {productData[0].nfc}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sim support</td>
+                    <td>
+                      {productData[0].simcard}
+                    </td>
+                </tr>
+                  </table>
+                </div>
+                <div className='buy-options'>
+            <button className='cart-button'>Cart</button>
+            <button className='buy-button'>Buy</button>
+          </div>
+     </div>
           
-            </div>
-            <div className='product-specification'>
-              <table>
-              <tr>
-                <td>Brand</td>
-                <td>
-                  Samsung
-                </td>
-            </tr>
-              <tr>
-                <td>Ram</td>
-                <td>
-                   8gb
-                </td>
-            </tr>
-            <tr>
-                <td>Rom</td>
-                <td>
-                   138gb
-                </td>
-            </tr>
-            <tr>
-                <td>Color</td>
-                <td>
-                   black
-                </td>
-            </tr>
-            <tr>
-                <td>battary</td>
-                <td>
-                   4000 mAh
-                </td>
-            </tr>
-            <tr>
-                <td>processor</td>
-                <td>
-                   Snapdragon 888+
-                </td>
-            </tr>
-            <tr>
-                <td>menufecturer</td>
-                <td>
-                   Samsung pvt ltd
-                </td>
-            </tr>
-              </table>
-            </div>
-            <div className='buy-options'>
-        <button className='cart-button'>Cart</button>
-        <button className='buy-button'>Buy</button>
-      </div>
- </div>
-      
-      </div>
-      <div className='product-reviews'>
+          </div>
+          <div className='product-reviews'>
+            
+          </div>
+          </>
+        ): <div>no such product found</div>
+        )
         
-      </div>
+      }
     </>
   )
 }
