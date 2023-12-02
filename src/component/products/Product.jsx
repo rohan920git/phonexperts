@@ -52,8 +52,8 @@ function Product() {
                 <h3>{productData[0].p_brand} {productData[0].p_name} ({productData[0].color}, {productData[0].rom}GB)  ({productData[0].ram}GB)</h3>
                 </div>
                 <div className='product-price'>
-                  <h3>{productData[0].discounted_price}</h3> 
-                  <h5>{productData[0].orignal_price}</h5> 
+                  <h3>₹{productData[0].discounted_price}</h3> 
+                  <h5>₹{productData[0].orignal_price}</h5> 
                 </div>
                 <div className='description'>
                   <table>

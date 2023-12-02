@@ -7,39 +7,59 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector , useDispatch } from 'react-redux';
 import { addToCart, removeFromCart } from '../../redux/actions';
 
-const cookieremover = ()=>{
-  if (Cookies.get('authCookie')) {
-    Cookies.remove('authCookie');
-    console.log('Cookie removed successfully');
-  } else {
-    console.log('Cookie not found');
-  }
-}
 
 function Home() {
   // const items =  useSelector(state => state.reducer.items);s
+  const token = Cookies.get('authCookie');
   const Dispatch = useDispatch();
   const navigate = useNavigate();
   const [phone_data, set_ph_data] = useState([])
-  const [popUp , setpopUp] = useState(false);
+  
+  
   useEffect( ()=>{
     fetch_data();
     
    },[])
-
+  useEffect( ()=>{
+    fetch_cart();
+  },[token])
+  const fetch_cart = async ()=>{
+    if(Cookies.get("authCookie")){
+      fetch(`http://localhost:5000/cart_items/${token}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      }
+      )
+      .then((data)=>{
+         let tempcart = [];
+      console.log(data);
+         data.map((ob,index)=>{
+        tempcart = [...tempcart ,ob.product_id]
+         })
+         Dispatch(addToCart(tempcart));
+      })
+      .catch((err)=>{
+        console.log(err);
+      })   
+    }
+  }
   const fetch_data = async ()=>{
     fetch("http://localhost:5000/getdata")
     .then((response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      // console.log(response.json());
       return response.json();
     })
     .then((data) => {
       set_ph_data(data);
      
       Cookies.set('data',JSON.stringify(data))
-      console.log(data);
+
     })
     .catch((error) => {
       console.error('Fetch error:', error);
@@ -88,6 +108,10 @@ function Home() {
       <button onClick={()=>{
         navigate(`/cart`);
       }}> Log out4</button>
+      <button onClick={()=>{
+        navigate(`/login`);
+      }}> Log out4</button>
+
     </>
   )
 }

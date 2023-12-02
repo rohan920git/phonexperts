@@ -6,6 +6,7 @@ const app = express();
 const users = require('./routes/createUser')
 const getdata  = require('./routes/getdata')
 const getdetails  = require('./routes/getdetails')
+const cart_items = require('./routes/getcart')
 const PORT  = 5000;
 app.use((req, res, next)=>{
     res.setHeader("Access-Control-Allow-Origin","http://localhost:3000")
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use('/',users);
 app.use('/',getdata);
 app.use('/',getdetails);
+app.use('/',cart_items);
 app.listen(PORT, ()=>{
     console.log("server started");
 })
