@@ -2,19 +2,23 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../common/Navbar'
 import Cookies from 'js-cookie'
 import './Product.scss'
-
+import {ToastContainer , toast} from 'react-toastify'
+import { useSelector , useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/actions';
 import { useParams } from 'react-router-dom'
-
+import { useNavigate } from 'react-router-dom';
 
 function Product() {
   const {id} = useParams();
+  const token = Cookies.get("authCookie")
 
-
+    const Dispatch = useDispatch();
+    const navigate = useNavigate();
   const [productData, setProductData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(()=>{
-      const testdata = JSON.parse(Cookies.get('data'))
-       console.log(testdata)
+   
+    
       
       const fetch_data = async ()=>{
         try{ const response = await fetch(`http://localhost:5000/getdetails/${id}`)
@@ -35,6 +39,39 @@ function Product() {
   fetch_data();
  
 },[])
+ const addCart = async (product_id)=>{
+
+  const response = await fetch(`http://localhost:5000/addTocart/${token}`,{
+    method: 'POST', // Using POST request to create a new resource in the database
+    mode: 'cors', // no-cors, cors, *same-origin
+   //  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'include', // include, *same-origin, omit
+    
+    headers: {
+        'Content-Type': 'application/json',
+    },
+   
+        body:JSON.stringify({
+          "product_id":product_id,
+        })
+        
+   })
+
+   
+   if(!response.ok){
+     toast("unable to connect to the server")
+ 
+    }
+    else{
+      toast("Item added successfully")
+    }
+
+
+ }
+ const buyNow = async (product_id)=>{
+  addCart(product_id);
+  navigate('/cart')
+ }
   return (
     <>
        {
@@ -166,8 +203,27 @@ function Product() {
                   </table>
                 </div>
                 <div className='buy-options'>
-            <button className='cart-button'>Cart</button>
-            <button className='buy-button'>Buy</button>
+            <button className='cart-button' onClick={()=>{
+               Dispatch(addToCart(productData[0].id))
+             if(token){
+
+             addCart(productData[0].id);
+            }
+            else{
+              toast("Item added successfully")
+            }
+            
+            }}>Cart</button>
+            <button className='buy-button'
+             onClick={()=>{
+              if(token){
+              buyNow(productData[0].id)
+              }
+              else{
+                navigate('/cart');
+              }
+             }}
+            >Buy</button>
           </div>
      </div>
           
@@ -180,6 +236,7 @@ function Product() {
         )
         
       }
+      <ToastContainer></ToastContainer>
     </>
   )
 }

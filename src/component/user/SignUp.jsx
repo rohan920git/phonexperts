@@ -3,6 +3,7 @@ import {  useNavigate } from 'react-router-dom'
 import {ToastContainer , toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
 import './SignUp.scss'
+import Navbar from '../common/Navbar'
 function SignUp() {
   const navigate = useNavigate();
   const [credentials , setCredentials] = useState({name:"",username:"",email:"",password:""})
@@ -25,7 +26,7 @@ function SignUp() {
     console.log(json);
     if(!json.success){
       toast(json.message);
-      console.log(`${json.message}`);
+
      }
      else{
        toast("Account Created Sucessfully")
@@ -41,7 +42,10 @@ function SignUp() {
       setCredentials({...credentials,[e.target.name]:e.target.value})
    }
   return (
+    <>
+    <Navbar></Navbar>
     <section className='page'>
+      
       <form className='sign-up-box' onSubmit={submithandler}>
         <div className='heading'>
           <p><span>Phonexperts</span><br></br>
@@ -56,7 +60,7 @@ function SignUp() {
            
            <input type="Email" placeholder='Email' name='email' onChange={changeHandler}/>
           
-           <input type="text" placeholder='Password' name='password' onChange={changeHandler}/>
+           <input type="password" placeholder='Password' name='password' onChange={changeHandler}/>
      
            
           
@@ -65,8 +69,9 @@ function SignUp() {
         
       </form>
       <ToastContainer/>
-      <h1>{credentials.name}===={credentials.username}====={credentials.email}===={credentials.password}</h1>
-    </section>
+     
+     </section>
+     </>
   )
 }
 

@@ -20,6 +20,7 @@ function Cards(props) {
   }
   const buttonhandler = async ()=>{
     Dispatch(addToCart(props.data.id))
+    if(token){
     const response = await fetch(`http://localhost:5000/addTocart/${token}`,{
       method: 'POST', // Using POST request to create a new resource in the database
       mode: 'cors', // no-cors, cors, *same-origin
@@ -42,6 +43,9 @@ function Cards(props) {
    
       }
       else{
+        toast("item added successfully")
+      }}
+      else{
         toast("Item added successfully")
       }
 
@@ -55,7 +59,12 @@ function Cards(props) {
           <div className='details'>
             <span>{props.data.p_name}</span>
             <span>₹{props.data.discounted_price}</span>
-           <div><button>Buy Now</button>
+           <div><button onClick={()=>{
+            buttonhandler();
+            toast("item added successfully")
+            navigate('/cart');
+           }
+          }>Buy Now</button>
             <button onClick={buttonhandler}>Add to cart</button></div>
           </div>
           <ToastContainer/>

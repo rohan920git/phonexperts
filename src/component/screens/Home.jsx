@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector , useDispatch } from 'react-redux';
 import { addToCart, removeFromCart } from '../../redux/actions';
 
-
 function Home() {
   // const items =  useSelector(state => state.reducer.items);s
   const token = Cookies.get('authCookie');
@@ -35,7 +34,7 @@ function Home() {
       )
       .then((data)=>{
          let tempcart = [];
-      console.log(data);
+   
          data.map((ob,index)=>{
         tempcart = [...tempcart ,ob.product_id]
          })
@@ -70,8 +69,8 @@ function Home() {
 
   return (
     <>
-    
-      <div > <Navbar></Navbar></div>
+    <Navbar></Navbar>
+  
       <section className='body'>
         <div className='banner'>
           <div className='on_banner_txt'>
@@ -84,7 +83,7 @@ function Home() {
 
             </div>
         </div>
-        <span>Top Rated phones</span>
+        <span className='card-heading'>Top Rated phones</span>
         <div className='cards'>
           {
             phone_data !== [] ? phone_data.map((data)=>{
@@ -106,8 +105,8 @@ function Home() {
         Dispatch(removeFromCart(1));
       }}> Log out</button>
       <button onClick={()=>{
-        navigate(`/cart`);
-      }}> Log out4</button>
+        navigate(`/profile`);
+      }}> somebody</button>
       <button onClick={()=>{
         navigate(`/login`);
       }}> Log out4</button>

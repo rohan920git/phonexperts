@@ -1,6 +1,7 @@
 import { useSelector , useDispatch } from 'react-redux';
 import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie';
+import {ToastContainer , toast} from 'react-toastify'
 // import { useSelector , useDispatch } from 'react-redux';
 import Navbar from '../common/Navbar'
 import img from "../assets/samsumg.jpg"
@@ -9,13 +10,14 @@ import { removeFromCart } from '../../redux/actions';
 function Cart() {
     const [phone_data,setphone_data]=useState([]);
     const [total,setTotal] = useState(0);
+   
     useEffect(()=>{
     const ph_data = JSON.parse(Cookies.get('data'));
     setphone_data(ph_data);
    
 
     },[])
-    
+   
     const cart_data1 = useSelector(state => state.reducer.items)
     const set = new Set(cart_data1);
     const cart_data = [...set];
@@ -36,7 +38,8 @@ function Cart() {
 
   return (
   <div>
-        <Navbar></Navbar><div className='cart-main'>
+    <Navbar></Navbar>
+     <div className='cart-main'>
         <div className='items'>
              <h3>Cart Items</h3>
         {
@@ -47,9 +50,6 @@ function Cart() {
                  return(
                    <div className='product'>
                       <CartCard data={data}></CartCard>
-                     
-                      
-                      
                      </div>
                  )}
                
@@ -59,8 +59,7 @@ function Cart() {
             
            
          }
-         {
-        }
+    
         
         </div>
         <div className='checkout'>
@@ -94,12 +93,40 @@ function Cart() {
 
         </div>
       </div>
+        <ToastContainer/>
 </div>
   )
 }
 function CartCard({data}){
+  const token = Cookies.get("authCookie")
   const Dispatch = useDispatch();
+  const removeCart = async (product_id) => {
+    const response = await fetch(`http://localhost:5000/removeFromCart/${token}`,{
+      method: 'POST', // Using POST request to create a new resource in the database
+      mode: 'cors', // no-cors, cors, *same-origin
+     //  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'include', // include, *same-origin, omit
+      
+      headers: {
+          'Content-Type': 'application/json',
+      },
+     
+          body:JSON.stringify({
+            "product_id":product_id,
+          })
+          
+     })
   
+     
+     if(!response.ok){
+       toast("unable to connect to the server")
+   
+      }
+      else{
+        toast("Item Removed successfully")
+      }
+       
+  }
 return(
   <>
   <div className='CartCard'>
@@ -111,8 +138,12 @@ return(
     <div className='product-price'>₹{data.discounted_price}</div>
     <button onClick={()=>{
       Dispatch(removeFromCart(data.id));
+      if(token){
+      removeCart(data.id);
+      }
     }} className='remove-product'>remove</button>
   </div>
+
   </>
 )
 

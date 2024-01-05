@@ -1,5 +1,7 @@
-$secondry2_color: #d8363a;
 
+$primary_color :#323232;
+$secondry2_color: #d8363a;
+$secondry_color: #FFE1A8;
 .navbars{
     background-color: rgba(255, 255, 255, 0.5); 
   backdrop-filter: blur(5px);
@@ -7,7 +9,7 @@ $secondry2_color: #d8363a;
     font-weight: 400;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     position: fixed;
     top:0;
     width: 100%;
@@ -29,7 +31,7 @@ $secondry2_color: #d8363a;
             list-style-type: none;
             >a{
                 text-decoration: none;
-                color:black;
+                color:$primary_color;
                 transition: 0.2s;             
             }
             >a:hover{
@@ -52,10 +54,16 @@ $secondry2_color: #d8363a;
     }
   
 }
+.cart{
+    position: relative;
+    width:5%;
+    text-align: end;
+    font-size: 25px;
+}
 .account{
     color: #443e3e;
-    width: 25%;
-    text-align: end;
+    width: 5%;
+    text-align: center;
     font-size: 25px;
     font-weight: 1;
 }

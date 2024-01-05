@@ -114,7 +114,7 @@ router.post('/addTocart/:token',(req,res)=>{
                     "err":err});
                 }
                  c_id = result.insertId;
-                 console.log("pohoch gaya");
+              
         connection.query(`insert into cart_items (cart_id , product_id, quantity) values (${c_id},${product_id},${1})`,(err,result)=>{
        
           if(err){
@@ -147,5 +147,37 @@ router.post('/addTocart/:token',(req,res)=>{
  
 
 })
+})
+router.post('/removeFromCart/:token',(req ,res )=>{
+
+    const product_id = req.body.product_id;
+    const token = req.params.token;
+    let  tokendata;
+    jwt.verify(token,jwtsec,(err,code)=>{
+        if(err)
+        {
+        res.status(100).json({success:false,
+                   "err":err});
+     
+        }
+        else{
+            tokendata =  code;
+        }
+
+     })
+    const user_id = tokendata.id;
+    db.query(`select cart_id from carts where user_id = ${user_id}`,(err,result)=>{
+        if(err){
+            return res.json({success:false,"err":err});
+        }
+        const cart_id = result[0].cart_id;
+        db.query(`delete from cart_items where cart_id = ${cart_id} and product_id = ${product_id}`,(err1,result1)=>{
+            if(err){
+                return res.json({success:false,err:err});
+            }
+            return res.json({success:true});
+        })
+
+    })
 })
 module.exports = router;

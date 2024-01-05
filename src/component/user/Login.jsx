@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {ToastContainer , toast} from 'react-toastify'
+
 import './SignUp.scss'
+import Navbar from '../common/Navbar';
 function Login() {
   const navigate = useNavigate();
   const [credentials , setcredentials] = useState({email:"",password:""});
@@ -39,6 +41,7 @@ function Login() {
   }
   return (
     <div>
+          <Navbar></Navbar>
       <section className='page' >
       <form onSubmit={handlesubmit} className='sign-up-box'>
         <div className='heading'>
@@ -50,7 +53,7 @@ function Login() {
            
            <input type="Email" placeholder='Email' name='email' onChange={handlechange} required/>
           
-           <input type="text" placeholder='password'name='password'onChange={handlechange} required/>
+           <input type="password" placeholder='password'name='password'onChange={handlechange} required/>
      
          
         </div>
