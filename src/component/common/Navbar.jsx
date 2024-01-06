@@ -60,7 +60,9 @@ function Navbar() {
         }
          </div>
          <div className='account'>
-            <VscAccount></VscAccount>
+            <VscAccount  onClick={()=>{
+              navigate(`/profile`);
+            }}></VscAccount>
           </div>         
       </div>
       
