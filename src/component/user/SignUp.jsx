@@ -4,10 +4,13 @@ import {ToastContainer , toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
 import './SignUp.scss'
 import Navbar from '../common/Navbar'
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css'
 function SignUp() {
   const navigate = useNavigate();
   const [credentials , setCredentials] = useState({name:"",username:"",email:"",password:""})
-   const  submithandler= async (e)=>{
+  const [phonenumber , setphonenumber] = useState("");
+  const  submithandler= async (e)=>{
     e.preventDefault();
     const response = await fetch("http://localhost:5000/createuser",{
      method: 'POST', // Using POST request to create a new resource in the database
@@ -19,7 +22,7 @@ function SignUp() {
      },
      redirect: 'follow', // manual, *follow, error
      referrer: 'no-referrer', 
-         body:JSON.stringify({name:credentials.name,username:credentials.username,email:credentials.email,password:credentials.password})
+         body:JSON.stringify({name:credentials.name,username:credentials.username,phonenumber:phonenumber,email:credentials.email,password:credentials.password})
          
     })
     const json = await response.json();
@@ -56,14 +59,21 @@ function SignUp() {
            <input type="text" placeholder='name' name='name'onChange={changeHandler}></input>
            
            <input type="text" placeholder='username' name='username' onChange={changeHandler}></input>
-           <button type='button'>check username</button>
+ 
+           <PhoneInput
+           country={"in"}
+           value={phonenumber}
+           onChange={(phone)=>{setphonenumber("+"+phone)}}
+           dropdownClass='dropdownnumber'
+           autoFormat='true'
+           ></PhoneInput>
            
            <input type="Email" placeholder='Email' name='email' onChange={changeHandler}/>
           
            <input type="password" placeholder='Password' name='password' onChange={changeHandler}/>
-     
+      
            
-          
+           <div dropd={{color:"black"}}>this is number {phonenumber}</div>
         </div>
          <button type='submit' className='submit-botton'>SIGN UP</button>
         

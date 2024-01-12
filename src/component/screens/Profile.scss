@@ -134,4 +134,35 @@ $secondry_color: #FFE1A8;
   margin:2px auto;
   width: 40%;
 }
-// this is for testing
+// this is when user in not logged
+.not-logged_in{
+  padding:30px;
+  margin: 20px auto;
+  width: 70%;
+
+  box-shadow: 2px 2px 5px $primary_color;
+  >p{
+    
+    display: block;
+    padding: 8px;
+    width: 100%;
+    text-align: center;
+  }
+  >button{
+    margin:4px auto;
+  }
+}
+.buttons{
+  margin-top:auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+ 
+  align-items: center;
+  >button{
+    background-color: #323232;
+    color:aliceblue;
+    padding:6px;
+    width: 200px;
+  }
+}

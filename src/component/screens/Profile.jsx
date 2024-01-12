@@ -5,28 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import { IoMdContact } from "react-icons/io";
 import Navbar from '../common/Navbar'
 function Profile() {
-    const [action, setAction] = useState("editprofile")
+    const [action, setAction] = useState("")
     const [activesection , setactivesection] = useState("profile")
     const navigate = useNavigate();
-    const cookieremover = ()=>{
-    
-        if (Cookies.get('authCookie')) {
-          Cookies.remove('authCookie');
-          console.log('Cookie removed successfully');
-        } else {
-          console.log('Cookie not found');
-        }
-        navigate("/home")
-    
-      }
-    
+   const token =  Cookies.get('authCookie');
+  
   return (
    <>
-   <div className="upperblock">
+    {
+      token ? (
+        <div className="upperblock">
     <div className='upperblock_text'>
    <span> <IoMdContact></IoMdContact></span> MyAccount
     </div>
     <div className='content'>
+    
       <div className='nevigation'>
         <div className={activesection == "profile" ? "active" :""} onClick={()=>{
           setAction("profile")
@@ -50,13 +43,24 @@ function Profile() {
         }}>Orders</div>
       </div>
     { action == "profile" &&(<ProfileCard></ProfileCard>) }
+    { action == "" &&(<ProfileCard></ProfileCard>) }
     {action == "editprofile" && <EditProfile></EditProfile>}
     {action == "changepassword" && <ChangePassword></ChangePassword>}
     {action == "order" && <Orders></Orders>}
     </div>
     </div>
-  
-   
+      ):(
+        <div className='not-logged_in'>
+        <p>
+        You are not logged in to your account
+        </p>
+        <div className='buttons'><button onClick={()=> navigate('/login')}>Log-in</button>
+        <button onClick={()=> navigate('/signup')}>Create new Account</button>
+        <button onClick={()=> navigate('/home')}>back to home page </button>
+        </div>
+        </div>
+      )
+    }
    </>
     )
 }

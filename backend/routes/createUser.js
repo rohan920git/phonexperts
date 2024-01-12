@@ -36,6 +36,16 @@ async (req , res)=>{
           }
         }
     })
+    db.query('SELECT email FROM users WHERE phone_number = ?',[req.body.phonenumber],(err,result)=>{
+      if(err){
+          res.json({success:false,message:err});
+      }
+      else{
+        if(result.length !== 0){
+          res.status(400).json({success:false, message:"phone number already exist"})
+        }
+      }
+  })
     // const userdata = await User.findOne({email});
     // if(userdata){
     //   return res.status(400).json({success:false,
@@ -46,7 +56,7 @@ async (req , res)=>{
    
     
     const timestamp = getCurrentTimestamp();
-    db.query('insert into users (name_,user_name, email , password_,created,modified)values(?,?,?,?,?,?);',[req.body.name,req.body.username,email,secpassword,timestamp,timestamp],(err,result)=>{
+    db.query('insert into users (name_,user_name, email , password_,created,modified,phone_number)values(?,?,?,?,?,?,?);',[req.body.name,req.body.username,email,secpassword,timestamp,timestamp,req.body.phonenumber],(err,result)=>{
         if(err){
             res.json({success:false, message:err});
         }
