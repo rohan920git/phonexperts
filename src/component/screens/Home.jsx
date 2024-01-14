@@ -13,9 +13,30 @@ function Home() {
   const Dispatch = useDispatch();
   const navigate = useNavigate();
   const [phone_data, set_ph_data] = useState([])
-  
+  const [isloading , setloading] = useState(true);
+
   
   useEffect( ()=>{
+    const fetch_data = async ()=>{
+      fetch("http://localhost:5000/getdata")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        // console.log(response.json());
+        return response.json();
+      })
+      .then((data) => {
+        set_ph_data(data);
+         setloading(false)
+        Cookies.set('data',JSON.stringify(data))
+  
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+      });
+      
+    }
     fetch_data();
     
    },[])
@@ -45,27 +66,11 @@ function Home() {
       })   
     }
   }
-  const fetch_data = async ()=>{
-    fetch("http://localhost:5000/getdata")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      // console.log(response.json());
-      return response.json();
-    })
-    .then((data) => {
-      set_ph_data(data);
-     
-      Cookies.set('data',JSON.stringify(data))
+  
 
-    })
-    .catch((error) => {
-      console.error('Fetch error:', error);
-    });
-    
-  }
-
+ if(isloading){
+  return <div className='loading'>loading...</div>
+ }
 
   return (
     <>

@@ -1,19 +1,68 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 import './Profile.scss'
 import { useNavigate } from 'react-router-dom';
 import { IoMdContact } from "react-icons/io";
 import Navbar from '../common/Navbar'
 function Profile() {
-    const [action, setAction] = useState("")
+  const token =  Cookies.get('authCookie');
+  const [action, setAction] = useState("")
     const [activesection , setactivesection] = useState("profile")
+    const [isloading,setloading] = useState(true);
+    const [userdata, setuserdata] = useState(null);
+    const [error , seterror] = useState(null);
+    useEffect(()=>{
+      const fetchdata = async()=>{
+    if(token){   try{
+        const response = await fetch(`http://localhost:5000/userprofile/${token}`)
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        // Parse the JSON data
+        const result = await response.json();
+        setuserdata(result[0]);
+        
+       }
+       catch(err){
+        seterror('Server not responding. Please try again later.');
+       }
+       finally{
+        setloading(false)
+       }
+      }
+      };
+      fetchdata();
+
+      }, [])
     const navigate = useNavigate();
-   const token =  Cookies.get('authCookie');
-  
+   if(!token){
+      return(
+        <div className='not-logged_in'>
+        <p>
+        You are not logged in to your account
+        </p>
+        <div className='buttons'><button onClick={()=> navigate('/login')}>Log-in</button>
+        <button onClick={()=> navigate('/signup')}>Create new Account</button>
+        <button onClick={()=> navigate('/home')}>back to home page </button>
+        </div>
+        </div>
+      )
+   }
+   if (error) {
+    return <div className='loading'>Error: {error}</div>;
+  }
+   if(isloading){
+    return(
+      <div className='loading'>
+        Loading...
+      </div>
+    )
+   }
+ 
   return (
    <>
-    {
-      token ? (
+
         <div className="upperblock">
     <div className='upperblock_text'>
    <span> <IoMdContact></IoMdContact></span> MyAccount
@@ -42,62 +91,110 @@ function Profile() {
           setactivesection("order")
         }}>Orders</div>
       </div>
-    { action == "profile" &&(<ProfileCard></ProfileCard>) }
-    { action == "" &&(<ProfileCard></ProfileCard>) }
-    {action == "editprofile" && <EditProfile></EditProfile>}
-    {action == "changepassword" && <ChangePassword></ChangePassword>}
-    {action == "order" && <Orders></Orders>}
+    { action == "profile" &&(<ProfileCard data={userdata}></ProfileCard>) }
+    { action == "" &&(<ProfileCard data={userdata}></ProfileCard>) }
+    {action == "editprofile" && <EditProfile data={userdata}></EditProfile>}
+    {action == "changepassword" && <ChangePassword data={userdata}></ChangePassword>}
+    {action == "order" && <Orders data={userdata}></Orders>}
     </div>
     </div>
-      ):(
-        <div className='not-logged_in'>
-        <p>
-        You are not logged in to your account
-        </p>
-        <div className='buttons'><button onClick={()=> navigate('/login')}>Log-in</button>
-        <button onClick={()=> navigate('/signup')}>Create new Account</button>
-        <button onClick={()=> navigate('/home')}>back to home page </button>
-        </div>
-        </div>
-      )
-    }
+  
    </>
     )
 }
-function ProfileCard(){
+function ProfileCard({data}){
   return(
     <>
     <div className='profile-card'></div>
     <div className='name-and-username'>
-      <h3>Rohan Baghel</h3>
-      <h5>rohan920i</h5>
+      <h3>{data.name_}</h3>
+      <h5>{data.user_name}</h5>
     </div>
     <div className="email-phone">
-      <h4> Email - Rohanb158@gmail.com</h4>
-      <h4> Phone - +917999268498</h4>
+      <h4> Email - {data.email}</h4>
+      <h4> Phone - {data.phone_number}</h4>
     </div>
     </>
   )
 }
-function EditProfile(){
+function EditProfile({data}){
+  const token =  Cookies.get('authCookie');
+  const [userdata , setuserdata]= useState({name_:data.name_,user_name:data.user_name,email:data.email});
+  const [namemessage,setnamemessgae]=useState("")
+  const [message,setmessgae]=useState("")
+  const savename = async()=>{
+    if(data.name_ !== userdata.name_){
+
+    
+    const fetchForsavename = async()=>{
+          const response = await fetch(`http://localhost:5000/savename/${token}`,{
+            method:"put",
+            mode:"cors",
+            headers:{
+              'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({name:userdata.name_})
+          })
+          if(!response.ok){
+            console.log("error occured"+ response);
+          }
+         const result = await response.json();
+         setnamemessgae(result.message)
+    }
+    fetchForsavename();
+  }
+
+  }
+  const saveuser_name = ()=>{
+    if(data.user_name !== userdata.user_name){
+              const fetchForsavename = async()=>{
+              const response = await fetch(`http://localhost:5000/saveusername/${token}`,{
+                method:"put",
+                mode:"cors",
+                headers:{
+                  'Content-Type': 'application/json',
+                },
+                body:JSON.stringify({username:userdata.user_name})
+              })
+              if(!response.ok){
+                setmessgae(response.message);
+              }
+             const result = await response.json();
+             setmessgae(result.message)
+        }
+        fetchForsavename();
+      
+    }
+  }
   return(
     <>
     <div className="edit-profile">
-    <div className='edit-photo-card'></div>
+    <div className='profile-card'></div>
     <div className="name">
       <label>Full name</label><br></br>
-      <input type='text' value={"Rohan baghel"}></input>
+      <input type='text' value={userdata.name_} name='name_'
+       onChange={(e)=>{
+        e.preventDefault();
+        setuserdata({...userdata,[e.target.name]:e.target.value})
+       }}
+      ></input>
+      <p>{namemessage}</p>
+      <button onClick={savename}>Save Changes</button>
     </div>
     <div className="name">
       <label>User Name</label><br></br>
-      <input type='text' value={"rohan920"}></input>
+      <input type='text' value={userdata.user_name} name="user_name"
+      
+       onChange={(e)=>{
+        e.preventDefault();
+        setuserdata({...userdata,[e.target.name]:e.target.value})
+       }}
+      ></input>
+        <p>{message}</p>
+      <button   onClick={saveuser_name}>Save Changes</button>
     </div>
-    <div className="name email">
-      <label>Email</label><br></br>
-      <input type='text' value={"Rohanb158@GMAIL.COM"}></input>
     </div>
-
-    </div>
+  
     </>
   )
 }
