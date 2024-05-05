@@ -14,7 +14,9 @@ function Profile() {
     useEffect(()=>{
       const fetchdata = async()=>{
     if(token){   try{
-        const response = await fetch(`http://localhost:5000/userprofile/${token}`)
+        const response = await fetch(`http://localhost:5000/userprofile/${token}`,{
+          cache: 'no-store'
+        })
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -61,7 +63,7 @@ function Profile() {
    }
  
   return (
-   <>
+   <div className='profile-screen'>
 
         <div className="upperblock">
     <div className='upperblock_text'>
@@ -99,13 +101,13 @@ function Profile() {
     </div>
     </div>
   
-   </>
+   </div>
     )
 }
 function ProfileCard({data}){
   return(
     <>
-    <div className='profile-card'></div>
+    <div className='profile-card' style={data.image_url ? { backgroundImage: `url(${data.image_url})`}:{}}></div>
     <div className='name-and-username'>
       <h3>{data.name_}</h3>
       <h5>{data.user_name}</h5>
@@ -122,6 +124,7 @@ function EditProfile({data}){
   const [userdata , setuserdata]= useState({name_:data.name_,user_name:data.user_name,email:data.email});
   const [namemessage,setnamemessgae]=useState("")
   const [message,setmessgae]=useState("")
+  const [updating , setupdating] = useState("");
   const savename = async()=>{
     if(data.name_ !== userdata.name_){
 
@@ -166,10 +169,54 @@ function EditProfile({data}){
       
     }
   }
+  const [image,setimage] = useState(null);
+  const [error, seterror] = useState("");
+  const submithandler = async()=>{
+      console.log(image);
+      const formdata = new FormData();
+      formdata.append('image',image);
+      setupdating("updating.....")
+      const response = await fetch(`http://localhost:5000/saveprofile/${token}`,{
+          method: 'POST',
+          cache: 'no-store',
+          body: formdata,
+      })
+   if(!response.ok){
+    setupdating("error....")
+     setTimeout(() => {
+      setupdating("")
+     },4000);  
+    console.log(response);
+   }    
+   else{
+      setupdating("updated...")
+     setTimeout(() => {
+      setupdating("")
+     },4000);  
+   }
+  }
+  const handlechange = (e) =>{
+     const file = e.target.files[0];
+     if(file){
+         if(file.type.startsWith('image/')){
+          setimage(file);
+         }
+         else{
+          seterror("please select valid image file")
+         }
+
+     }
+     else{
+      seterror("please select image")
+     }
+  }
   return(
     <>
     <div className="edit-profile">
-    <div className='profile-card'></div>
+    <div className='profile-card' style={data.image_url ? { backgroundImage: `url(${data.image_url})`}:{}}></div>
+    <input type='file' name='profileimage' accept="image/*" onChange={handlechange}/>
+        <button type='submit' onClick={submithandler}>submit</button>
+        <p className='updating-message'>{updating}</p>
     <div className="name">
       <label>Full name</label><br></br>
       <input type='text' value={userdata.name_} name='name_'
@@ -194,7 +241,7 @@ function EditProfile({data}){
       <button   onClick={saveuser_name}>Save Changes</button>
     </div>
     </div>
-  
+     
     </>
   )
 }

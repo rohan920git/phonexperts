@@ -35,12 +35,18 @@ $secondry_color: #FFE1A8;
   top:70%;
   position: absolute;
   width: 80%;
-  height: 70vh;
+  min-height: 70vh;
 
+  margin-bottom: 20px;
   background-color: whitesmoke;
   border-radius: 12px;
   box-shadow: 2px 2px 5px $primary_color;
 }
+// .profile-screen{
+//   overflow: auto;
+//   height: 100vh;
+//   width: 100%;
+// }
 .nevigation{
   transition:1s;
   display: flex;
@@ -183,4 +189,8 @@ $secondry_color: #FFE1A8;
   background: url("../assets/avtar.jpg");
   background-size:contain;
   background-repeat: no-repeat;
+}
+.updating-message{
+  font-size: 15px;
+  color:#45a049
 }

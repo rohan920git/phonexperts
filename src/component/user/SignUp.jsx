@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import {  useNavigate } from 'react-router-dom'
-import {ToastContainer , toast} from 'react-toastify'
+
 import "react-toastify/dist/ReactToastify.css"
 import './SignUp.scss'
 import Navbar from '../common/Navbar'
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
+import Popup from '../common/Popup'
 function SignUp() {
   const navigate = useNavigate();
   const [credentials , setCredentials] = useState({name:"",username:"",email:"",password:""})
   const [phonenumber , setphonenumber] = useState("");
+  const [popup , setpopup] = useState(false);
+  const [popupdetails , setpoppudetails] = useState({});
   const  submithandler= async (e)=>{
     e.preventDefault();
     const response = await fetch("http://localhost:5000/createuser",{
@@ -28,11 +31,18 @@ function SignUp() {
     const json = await response.json();
     console.log(json);
     if(!json.success){
-      toast(json.message);
-
+      setpoppudetails({success:false,text:json.message});
+      setpopup(true);
+      setTimeout(() => {
+        setpopup(false);
+      }, 1000);
      }
      else{
-       toast("Account Created Sucessfully")
+      setpoppudetails({success:true,text:"Account created successfully"});
+      setpopup(true);
+      setTimeout(() => {
+        setpopup(false);
+      }, 1000);
       setTimeout(()=>{
         
         navigate("/login");
@@ -78,8 +88,8 @@ function SignUp() {
          <button type='submit' className='submit-botton'>SIGN UP</button>
         
       </form>
-      <ToastContainer/>
-     
+        {popup && <Popup message={{success:popupdetails.success,text:popupdetails.text}}></Popup>}
+        
      </section>
      </>
   )

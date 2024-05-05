@@ -1,19 +1,20 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import {ToastContainer , toast} from 'react-toastify'
 import './SignUp.scss'
 import Navbar from '../common/Navbar';
+import Popup from '../common/Popup';
 
 function Login() {
   const navigate = useNavigate();
   const [credentials , setcredentials] = useState({email:"",password:""});
+  const [popup , setpopup] = useState(false);
+  const [popupdetails , setpoppudetails] = useState({});
  
   const handlechange = (e)=>{
     setcredentials({...credentials,[e.target.name]:e.target.value});
   }
-  const handlesubmit = async (e)=>{
-    e.preventDefault();
- 
+  const handlesubmit = async()=>{
+       try{
     const response = await fetch("http://localhost:5000/login",{
      method: 'POST', // Using POST request to create a new resource in the database
      mode: 'cors', // no-cors, cors, *same-origin
@@ -32,19 +33,36 @@ function Login() {
     console.log(json);
 
     if(!json.success){
-      toast(json.message)
-  
+    
+      setpoppudetails({success:false,text:json.message})
+      setpopup(true);
+      setTimeout(() => {
+        setpopup(false);
+      },1000);
+   
      }
      else{
+      setpoppudetails({success:true,text:"successfully logged in"})
+      setpopup(true);
+      setTimeout(() => {
+        setpopup(false);
+      },1000);
       navigate("/home");
      }
-     
+    }
+    catch(error){
+      console.log("mil gaya")
+        console.log(error)
+    }
   }
   return (
     <div>
           <Navbar></Navbar>
       <section className='page' >
-      <form onSubmit={handlesubmit} className='sign-up-box'>
+      <form onSubmit={(e)=>{
+         e.preventDefault();
+         handlesubmit();
+      }} className='sign-up-box'>
         <div className='heading'>
           <p><span>Phonexperts</span><br></br>
           Log-in to your account</p>
@@ -62,7 +80,7 @@ function Login() {
         
       </form>
     </section>
-   <ToastContainer/>
+    {popup && <Popup message={popupdetails}></Popup>}
 
     </div>
     
